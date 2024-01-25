@@ -67,17 +67,22 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 if(file!=null)
                 {
+                    // new file name
                     string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                    // if product has an image, remove it
                     if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
-                        //remove old iamge
+                        //remove old iamge FROM FILES
                         var oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
                         if (System.IO.File.Exists(oldImagePath))
                         {
                             System.IO.File.Delete(oldImagePath);
                         }
                     }
+
+                    // add or update, the product doesn't have the old image
                     using (var fileStream = new FileStream(Path.Combine(productPath, filename), FileMode.Create))
                     {
                         file.CopyTo(fileStream);
